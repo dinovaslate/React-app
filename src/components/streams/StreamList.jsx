@@ -3,17 +3,24 @@ import { connect } from "react-redux";
 import { fetchList } from "../../actions";
 import { Link } from "react-router-dom";
 import StreamDelete from "./StreamDelete";
-
+import Context from "../../context/Error";
 class StreamList extends Component {
   componentDidMount() {
     const { fetchList } = this.props;
     fetchList();
-    console.log(this.props);
   }
   render() {
     const { streams, currentUserId, isSignedIn, location } = this.props;
+    const { globalError, setGlobalError } = this.context;
     return (
       <>
+        {globalError && (
+          <div class="ui message">
+            <i class="close icon" onClick={() => setGlobalError("")}></i>
+            <div class="header">{globalError.split(":")[0]}</div>
+            <p>{globalError.split(":")[1]}</p>
+          </div>
+        )}
         <h1>Streams</h1>
         <div className="ui relaxed celled list">
           {streams.map(({ title, description, userId, id }) => (
@@ -54,6 +61,7 @@ class StreamList extends Component {
     );
   }
 }
+StreamList.contextType = Context;
 const mapStateToProps = (state) => {
   return {
     streams: Object.values(state.streams),

@@ -2,6 +2,8 @@ import React from "react";
 
 import { connect } from "react-redux/es/exports";
 import { signIn, signOut } from "../actions";
+import { fetchAProfile } from "../actions";
+import history from "../history";
 class GoogleAuth extends React.Component {
   componentDidMount() {
     window.gapi.load("client:auth2", () => {
@@ -21,9 +23,10 @@ class GoogleAuth extends React.Component {
   }
 
   onAuthChange = (isSignedIn) => {
-    const { signIn, signOut } = this.props;
+    const { signIn, signOut, fetchAProfile } = this.props;
     if (isSignedIn) {
       signIn(this.auth.currentUser.get().getId());
+      fetchAProfile(this.auth.currentUser.get().getId());
     } else {
       signOut();
     }
@@ -63,4 +66,5 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   signIn,
   signOut,
+  fetchAProfile,
 })(GoogleAuth);

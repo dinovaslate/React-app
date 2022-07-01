@@ -1,7 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
+import { useDidMount } from "rooks";
+import { useWillUnmount } from "rooks";
 const Modal = ({ children, header, setAction, img }) => {
+  useDidMount(() => {
+    document.body.style.setProperty("overflow", "hidden");
+    document.body.scrollTop = 0;
+  });
+  useWillUnmount(() => {
+    document.body.style.setProperty("overflow", "visible");
+  });
   return ReactDOM.createPortal(
     <div className="ui dimmer modals visible active">
       <div className="ui standard modal visible active">
