@@ -1,9 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-const GoogleAuth = React.lazy(() => import('./GoogleAuth'));
-import { connect } from 'react-redux';
 import { useDidMount } from 'rooks';
-import { fetchAProfile } from '../actions';
+const GoogleAuth = React.lazy(() => import('./GoogleAuth'));
 
 const Header = ({ avatar, fetchAProfile, usr }) => {
   useDidMount(() => {
