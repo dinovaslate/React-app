@@ -12,7 +12,7 @@ class GoogleAuth extends React.Component {
       window.gapi.client
         .init({
           clientId:
-            '129235200710-fmujgvvof7otr0d18hcp23pjk63ksggn.apps.googleusercontent.com',
+            '663820511050-21ip85rv476e3ftoo2f53q9qktmlana7.apps.googleusercontent.com',
           scope: 'email',
           plugin_name: 'streamy',
         })
