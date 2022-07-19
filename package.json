@@ -1,6 +1,10 @@
 {
   "name": "twitch",
   "version": "0.1.0",
+  "engines": {
+    "node": "16.13.2",
+    "npm": "6.14.13"
+  },
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
@@ -17,7 +21,7 @@
     "redux": "^4.2.0",
     "redux-form": "^8.3.8",
     "redux-thunk": "^2.4.1",
-    "rooks": "^5.11.2",
+    "rooks": "^5.11.8",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
