@@ -5,8 +5,6 @@ export default (state = {}, action) => {
         const { streamId, replyTo } = curr;
         if (!prev[streamId]) {
           prev[streamId] = new Object();
-          prev[streamId][replyTo] = [curr];
-          return prev;
         }
         if (!prev[streamId][replyTo]) {
           prev[streamId][replyTo] = [curr];
@@ -27,8 +25,6 @@ export default (state = {}, action) => {
       const { streamId, replyTo } = action.payload;
       if (!state[streamId]) {
         state[streamId] = new Object();
-        state[streamId][replyTo] = [action.payload];
-        return state;
       }
       if (!state[streamId][replyTo]) {
         state[streamId][replyTo] = [action.payload];

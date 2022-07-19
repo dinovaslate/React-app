@@ -1,14 +1,14 @@
 const INIT_STATE = {
   isSignedIn: null,
-  userId: null,
+  usr: null,
 };
 
 export default (state = INIT_STATE, action) => {
   switch (action.type) {
     case "SIGN_IN":
-      return { ...state, isSignedIn: true, userId: action.payload };
+      return { ...state, isSignedIn: true, usr: action.payload };
     case "SIGN_OUT":
-      return { ...state, isSignedIn: false, userId: null };
+      return { ...state, isSignedIn: false, usr: null };
     default:
       return state;
   }

@@ -9,10 +9,11 @@ import Modal from "../Modal";
 const Commentar = ({
   comment,
   deleteComments,
-  userId,
+  usr,
   avatar,
   fetchProfile,
   name,
+  isSignedIn,
 }) => {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState(false);
@@ -37,7 +38,9 @@ const Commentar = ({
     setOpenModal(true);
   };
   useEffect(() => {
-    action ? deleteComments(comment.id, comment) : setOpenModal(false);
+    action && deleteComments(comment.id, comment);
+    setAction(null);
+    setOpenModal(false);
   }, [action]);
   useEffect(() => {
     if (replying !== comment.id) {
@@ -56,12 +59,15 @@ const Commentar = ({
         </div>
         <div class="text">{comment.comment}</div>
         <div class="actions">
-          <a class="reply" onClick={reply}>
-            Reply
-          </a>
-          {comment.userId === userId && (
+          {isSignedIn && (
+            <a class="reply" onClick={reply}>
+              Reply
+            </a>
+          )}
+
+          {comment.usr === usr && (
             <>
-              <a class="reply" onClick={deleteComment}>
+              <a class="reply" href="#" onClick={deleteComment}>
                 Delete
               </a>
               <a class="reply" onClick={updateComment}>
@@ -101,15 +107,16 @@ const Commentar = ({
   );
 };
 const mapStateToProps = (state, ownProps) => {
-  const currentUser = state.users[ownProps.comment.userId];
+  const currentUser = state.users[ownProps.comment.usr];
   const avatar = currentUser
     ? currentUser.avatar
     : "https://cdn2.iconfinder.com/data/icons/profile-basic/32/03_-_User_Deleted-512.png";
-  const name = currentUser ? currentUser.name : ownProps.comment.userId;
+  const name = currentUser ? currentUser.name : ownProps.comment.usr;
   return {
-    userId: state.auth.userId,
+    usr: state.auth.usr,
     avatar,
     name,
+    isSignedIn: state.auth.isSignedIn,
   };
 };
 export default connect(mapStateToProps, { deleteComments, fetchProfile })(

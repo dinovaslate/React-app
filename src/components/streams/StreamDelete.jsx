@@ -6,7 +6,7 @@ import Modal from "../../Modal";
 import { useEffectOnceWhen, useDidMount } from "rooks";
 import { fetchList } from "../../actions";
 
-const StreamDelete = ({ id, deleteList, streams, userID, fetchList }) => {
+const StreamDelete = ({ id, deleteList, streams, usr, fetchList }) => {
   const [action, setAction] = useState(null);
   const STREAM_ID = id;
   const handleDelete = () => {
@@ -21,10 +21,10 @@ const StreamDelete = ({ id, deleteList, streams, userID, fetchList }) => {
     action ? handleDelete() : history.push("/");
   }, action !== null);
   useEffectOnceWhen(() => {
-    if (streams[STREAM_ID].userId !== userID) {
+    if (streams[STREAM_ID].usr !== usr) {
       history.push("/");
     }
-  }, streams[STREAM_ID] !== undefined && userID !== undefined && userID !== null);
+  }, streams[STREAM_ID] !== undefined && usr !== undefined && usr !== null);
   return (
     <Modal header="Delete this stream" setAction={setAction}>
       <div class="ui list">
@@ -42,7 +42,7 @@ const StreamDelete = ({ id, deleteList, streams, userID, fetchList }) => {
 const mapStateToProps = (state, ownProps) => {
   return {
     streams: state.streams,
-    userID: state.auth.userId,
+    usr: state.auth.usr,
   };
 };
 

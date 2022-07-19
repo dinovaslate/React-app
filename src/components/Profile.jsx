@@ -1,49 +1,75 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
-import { useDidMount } from "rooks";
-import { useEffectOnceWhen } from "rooks";
-import { connect } from "react-redux";
-import { fetchAProfile } from "../actions";
-import { updateProfile } from "../actions";
-import { createProfile } from "../actions";
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useEffectOnceWhen, useDidMount } from 'rooks';
+import { connect } from 'react-redux';
+import { fetchAProfile } from '../actions';
+import { updateProfile } from '../actions';
+import { createProfile } from '../actions';
+import { deleteProfile } from '../actions';
+import history from '../history';
 const UserProfile = ({
   fetchAProfile,
   user,
-  userId,
+  usr,
   updateProfile,
   createProfile,
+  deleteProfile,
+  isSignedIn,
 }) => {
-  const [name, setName] = useState("");
-  const [profile, setProfile] = useState("");
-  const [bio, setBio] = useState("");
-  useDidMount(() => {
-    if (userId && userId !== null) fetchAProfile(userId);
-  });
+  const { id } = useParams();
+  const [name, setName] = useState('');
+  const [profile, setProfile] = useState('');
+  const [readonly, setReadonly] = useState(false);
+  const [first, setFirst] = useState(true);
+  const [bio, setBio] = useState('');
+
   useEffectOnceWhen(() => {
-    setName(user.name);
-    setProfile(user.avatar);
-    setBio(user.bio);
-  }, user !== undefined);
+    if (isSignedIn) {
+      history.push(`/profile/${usr}`);
+      return;
+    }
+    history.push('/');
+  }, !id && isSignedIn !== null);
+
+  useEffect(() => {
+    if (user[id]) {
+      setName(user[id].name);
+      setProfile(user[id].avatar);
+      setBio(user[id].bio);
+      setFirst(false);
+      setReadonly(id !== usr);
+    } else {
+      fetchAProfile(id);
+    }
+  }, [id, user]);
   const handleSubmit = () => {
     const data = {
-      userId,
+      usr,
       name,
       avatar: profile,
       bio,
     };
-    user ? updateProfile({ ...data, id: user.id }) : createProfile(data);
+    user[id]
+      ? updateProfile({ ...data, id: user[id].id })
+      : createProfile(data);
   };
+
+  const handleDelete = () => {
+    deleteProfile(user[id].id);
+  };
+
   return (
     <>
-      <img
-        className="ui small image"
-        src={
-          user
-            ? user.avatar
-            : "https://semantic-ui.com/images/wireframe/image.png"
-        }
-      />
-      <h2 className="ui header">{user ? "Welcome Back" : "Hello User"}</h2>
+      <div className="container-center-small">
+        <img
+          className="ui small image image-big-at-small"
+          src={profile || 'https://semantic-ui.com/images/wireframe/image.png'}
+        />
+      </div>
+
+      <h2 className="ui header center" style={{ textAlign: 'center' }}>
+        {readonly ? name : 'Hello User'}
+      </h2>
       <div class="ui form">
         <div class="field">
           <label>Name</label>
@@ -52,6 +78,7 @@ const UserProfile = ({
             value={name}
             onChange={(e) => setName(e.currentTarget.value)}
             placeholder="Name"
+            readOnly={readonly}
           />
         </div>
         <div class="field">
@@ -61,6 +88,7 @@ const UserProfile = ({
             value={profile}
             onChange={(e) => setProfile(e.currentTarget.value)}
             placeholder="Name"
+            readOnly={readonly}
           />
         </div>
         <div class="field">
@@ -70,24 +98,39 @@ const UserProfile = ({
             value={bio}
             onChange={(e) => setBio(e.currentTarget.value)}
             placeholder="Last Name"
+            readOnly={readonly}
           />
         </div>
-
-        <button class="ui button" onClick={handleSubmit} type="submit">
-          Submit
-        </button>
+        {!readonly && (
+          <>
+            <button class="ui button" onClick={handleSubmit} type="submit">
+              Submit
+            </button>
+            {!first && (
+              <button
+                class="ui red button"
+                onClick={handleDelete}
+                type="submit"
+              >
+                Delete
+              </button>
+            )}
+          </>
+        )}
       </div>
     </>
   );
 };
 const mapStateToProps = (state) => {
   return {
-    user: state.users[state.auth?.userId],
-    userId: state.auth?.userId,
+    user: state.users,
+    usr: state.auth?.usr,
+    isSignedIn: state.auth.isSignedIn,
   };
 };
 export default connect(mapStateToProps, {
   fetchAProfile,
   updateProfile,
   createProfile,
+  deleteProfile,
 })(UserProfile);

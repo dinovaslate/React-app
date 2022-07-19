@@ -5,21 +5,15 @@ import { useDidMount, useEffectOnceWhen } from "rooks";
 import StreamForm from "./StreamForm";
 import history from "../../history";
 
-const StreamEdit = ({
-  fetchAList,
-  changeList,
-  match,
-  initialValues,
-  userID,
-}) => {
+const StreamEdit = ({ fetchAList, changeList, match, initialValues, usr }) => {
   useDidMount(() => {
     fetchAList(match.params.id);
   });
   useEffectOnceWhen(() => {
-    if (initialValues.userId !== userID) {
+    if (initialValues.usr !== usr) {
       history.push("/");
     }
-  }, initialValues !== undefined && userID !== undefined && userID !== null);
+  }, initialValues !== undefined && usr !== undefined && usr !== null);
   const onSubmit = (formValues) => {
     changeList(match.params.id, formValues);
   };
@@ -34,7 +28,7 @@ const StreamEdit = ({
 const mapStateToProps = (state, ownProps) => {
   return {
     initialValues: state.streams[ownProps.match.params.id],
-    userID: state.auth.userId,
+    usr: state.auth.usr,
   };
 };
 export default connect(mapStateToProps, { fetchAList, changeList })(StreamEdit);

@@ -1,11 +1,11 @@
-import React, { useRef, useState, useContext } from "react";
-import { connect } from "react-redux";
-import { fetchAList } from "../../actions";
-import { useDidMount, useEffectOnceWhen, useWillUnmount } from "rooks";
-import FlvJs from "flv.js";
-import Comments from "../Comments";
-import CommentForm from "../CommentForm";
-import Context from "../../context/Error";
+import React, { useRef, useState, useContext } from 'react';
+import { connect } from 'react-redux';
+import { fetchAList } from '../../actions';
+import { useDidMount, useEffectOnceWhen, useWillUnmount } from 'rooks';
+import FlvJs from 'flv.js';
+import Comments from '../Comments';
+import CommentForm from '../CommentForm';
+import Context from '../../context/Error';
 
 const StreamShow = ({ stream, fetchAList, match, auth }) => {
   const [err, setErr] = useState(null);
@@ -19,13 +19,13 @@ const StreamShow = ({ stream, fetchAList, match, auth }) => {
   const { setGlobalError } = useContext(Context);
   useEffectOnceWhen(() => {
     const player = FlvJs.createPlayer({
-      type: "flv",
-      url: `http://localhost:8000/live/${STREAM_ID}.flv`,
+      type: 'flv',
+      url: `https://rtmp-server-streamy.herokuapp.com/live/${STREAM_ID}.flv`,
     });
     player.attachMediaElement(VIDEO_REF.current);
     player.load();
     PLAYER_REF.current = player;
-    player.on("error", () => {
+    player.on('error', () => {
       setErr("Can't Display Stream");
     });
   }, stream !== undefined);
@@ -45,7 +45,7 @@ const StreamShow = ({ stream, fetchAList, match, auth }) => {
         <div>Loading...</div>
       ) : (
         <div>
-          <video ref={VIDEO_REF} style={{ width: "100%" }} controls />
+          <video ref={VIDEO_REF} style={{ width: '100%' }} controls />
           {err !== null && (
             <div class="ui message">
               <i class="close icon" onClick={() => setErr(null)}></i>
@@ -56,7 +56,7 @@ const StreamShow = ({ stream, fetchAList, match, auth }) => {
               </p>
             </div>
           )}
-          <h1 style={{ textTransform: "capitalize" }}>{stream.title}</h1>
+          <h1 style={{ textTransform: 'capitalize' }}>{stream.title}</h1>
           <p>{stream.description}</p>
           <Comments streamId={STREAM_ID} />
           {auth && <CommentForm mode="Reply" streamId={STREAM_ID} />}

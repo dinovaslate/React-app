@@ -1,48 +1,30 @@
-import React, { useRef, useState } from "react";
-import { useDidMount } from "rooks";
-import { useEffectOnceWhen } from "rooks";
-import { connect } from "react-redux";
-import Commentar from "./Comment";
-import { fetchComments } from "../actions";
-import { useLocation } from "react-router-dom";
+import React, { useRef, useState } from 'react';
+import { useDidMount } from 'rooks';
+import { useEffectOnceWhen } from 'rooks';
+import { connect } from 'react-redux';
+import Commentar from './Comment';
+import { fetchComments } from '../actions';
 
-const Comments = ({ streamId, replyTo = "none", comments, fetchComments }) => {
-  const [viewReply, setViewReply] = useState(false);
-  const query = new URLSearchParams(useLocation().search);
+const Comments = ({ streamId, replyTo = 'none', comments, fetchComments }) => {
   useDidMount(() => {
-    replyTo === "none" && fetchComments();
-    if (query.get("view") === "yes") setViewReply(true);
+    replyTo === 'none' && fetchComments();
   });
 
   const renderComment = () => {
     return (
       <>
-        {replyTo === "none" && <h3 className="ui dividing header">Comments</h3>}
+        {replyTo === 'none' && <h3 className="ui dividing header">Comments</h3>}
         <div
-          className={`${replyTo === "none" && "ui threaded"} comments`}
-          style={{ maxWidth: "100%", marginBottom: "2rem" }}
+          className={`${replyTo === 'none' && 'ui threaded'} comments`}
+          style={{ maxWidth: '100%', marginBottom: '2rem' }}
         >
-          {comments[replyTo].map((comment) => (
+          {comments[replyTo]?.map((comment) => (
             <>
               <div className="comment">
                 <Commentar comment={comment} />
                 {comment.id in comments && (
                   <>
-                    {viewReply && (
-                      <ChildOfComments
-                        streamId={streamId}
-                        replyTo={comment.id}
-                      />
-                    )}
-                    {!viewReply && (
-                      <b
-                        className="ui blue text"
-                        style={{ marginLeft: "50px", color: "blue" }}
-                        onClick={() => setViewReply(!viewReply)}
-                      >
-                        View Reply
-                      </b>
-                    )}
+                    <ChildOfComments streamId={streamId} replyTo={comment.id} />
                   </>
                 )}
               </div>

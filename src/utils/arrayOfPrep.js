@@ -1,0 +1,27 @@
+const makeRegex = [
+  "of",
+  "at",
+  "and",
+  "^a$",
+  "an",
+  "in",
+  "as",
+  "but",
+  "for",
+  "nor",
+  "or",
+  "so",
+  "the",
+  "by",
+  "of",
+  "off",
+  "per",
+  "to",
+  "up",
+  "down",
+  "right",
+  "left",
+  "via",
+];
+
+export default makeRegex;
