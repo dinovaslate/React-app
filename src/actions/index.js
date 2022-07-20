@@ -110,6 +110,7 @@ export const changeList = (id, data) => async (dispatch) => {
 export const deleteList =
   (id, called = false) =>
   async (dispatch) => {
+    dispatch({ type: 'LOADING_TRUE' });
     const comments = await streams.get(`/comments/streamId/${id}`);
     for (const comment of comments.data) {
       await streams.delete(`/comments/${comment.id}`);
@@ -120,6 +121,7 @@ export const deleteList =
       dispatch(fetchList());
       history.push('/');
     }
+    dispatch({ type: 'LOADING_FALSE' });
   };
 
 export const formChanged = (param) => {
@@ -187,6 +189,7 @@ export const changeStory = (id, data) => async (dispatch, getState) => {
   history.push('/');
 };
 export const deleteStory = (id, title) => async (dispatch) => {
+  dispatch({ type: 'LOADING_TRUE' });
   const comments = await streams.get(`/comments/streamId/${title}`);
   for (const comment of comments.data) {
     await streams.delete(`/comments/${comment.id}`);
@@ -194,6 +197,7 @@ export const deleteStory = (id, title) => async (dispatch) => {
   await streams.delete(`/story/${id}`);
   dispatch({ type: 'DELETE_STORY', payload: id });
   history.push('/');
+  dispatch({ type: 'LOADING_FALSE' });
 };
 
 export const initStory = (usrid) => (dispatch, getState) => {
